@@ -28,6 +28,7 @@ output.write(template);
         {
             "className": "com.test.testcase.TestDemo1",
             "methodName": "testDemo",
+            "description": "测试DEMO",
             "spendTime": "11ms",
             "status": "成功",
             "log": [

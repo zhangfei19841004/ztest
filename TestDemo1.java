@@ -14,7 +14,7 @@ import com.test.report.ZTestReport;
 @Listeners({ZTestReport.class})
 public class TestDemo1{
 	
-	@BeforeMethod
+	@BeforeMethod(description="测试方法前初始化")
 	public void beforeMethod(Method m){
 		if("testDemo3".equals(m.getName())){
 			int a = 1/0;
@@ -22,7 +22,7 @@ public class TestDemo1{
 		}
 	}
 	
-	@Test
+	@Test(description="测试DEMO")
 	public void testDemo(){
 		Reporter.log("this is demo!");
 		int a = 1/0;
@@ -30,19 +30,19 @@ public class TestDemo1{
 		Assert.assertEquals("a", "b", "should be equals.");
 	} 
 	
-	@Test
+	@Test(description="测试DEMO1")
 	public void testDemo1(){
 		Reporter.log("this is demo!");
 		Assert.assertEquals("a", "b", "should be equals.");
 	} 
 	
-	@Test(dataProvider="test")
+	@Test(description="测试DEMO2",dataProvider="test")
 	public void testDemo2(int a){
 		Reporter.log("this is demo!");
 		Assert.assertEquals(a, 1, "should be equals.");
 	} 
 	
-	@Test
+	@Test(description="测试DEMO3")
 	public void testDemo3(){
 		Reporter.log("this is demo!");
 		Assert.assertEquals("a", "a", "should be equals.");

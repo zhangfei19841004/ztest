@@ -129,6 +129,7 @@ public class ZTestReport implements IReporter {
 				info.setStatus(status);
 				info.setClassName(result.getInstanceName());
 				info.setMethodName(result.getName());
+				info.setDescription(result.getMethod().getDescription());
 				info.setLog(log);
 				listInfo.add(info);
 			}
@@ -178,6 +179,8 @@ public class ZTestReport implements IReporter {
 		private String className;
 	
 		private String methodName;
+		
+		private String description;
 		
 		private String spendTime;
 				
@@ -231,6 +234,14 @@ public class ZTestReport implements IReporter {
 
 		public void setLog(List<String> log) {
 			this.log = log;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
 		}
 		
 	}

@@ -108,7 +108,8 @@
                             <th>编号</th>
                             <th>测试类</th>
                             <th>测试方法</th>
-                            <th>运行时长</th>
+                            <th>用例描述</th>
+                            <th>耗时</th>
                             <th>结果</th>
                             <th>操作</th>
                         </tr>
@@ -167,7 +168,7 @@
             } else {
                 status = "<td><span>" + n["status"] + "</span></td>";
             }
-            var tr = "<tr><td>" + (i + 1) + "</td><td>" + n["className"] + "</td><td>" + n["methodName"] + "</td><td>" + n["spendTime"] + "</td>" +
+            var tr = "<tr><td>" + (i + 1) + "</td><td>" + n["className"] + "</td><td>" + n["methodName"] + "</td><td>"+n["description"]+"</td><td>" + n["spendTime"] + "</td>" +
                 status + "<td><button type='button' onclick='details(this)' buttonIndex='" + i + "' class='btn btn-primary btn-xs' style='margin-bottom: 0px'>展开</button></td></tr>"
             $("#detailBody").append(tr);
         });
