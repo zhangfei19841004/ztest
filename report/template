@@ -8,6 +8,7 @@
     <link href="css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="css/animate.min.css" rel="stylesheet">
     <link href="css/style.min.css?v=4.0.0" rel="stylesheet">
+    <link href="css/plugins/chosen/chosen.css" rel="stylesheet">
     <base target="_blank">
 </head>
 <body class="gray-bg">
@@ -102,14 +103,19 @@
                     </div>
                 </div>
                 <div class="ibox-content">
+                    <div class="input-group panel-heading" style="width: 100%; background-color: #1ab394; margin-bottom: 10px; text-align: left; font-family: Consolas;">
+                        <label style="color: snow">测试方法:</label>
+                        <select class="chosen-select" data-placeholder="----------" style="width: 300px;" name="filterClass" id="filterClass">
+                            <option value="">----------</option>
+                        </select>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                         <tr>
                             <th>编号</th>
                             <th>测试类</th>
                             <th>测试方法</th>
-                            <th>用例描述</th>
-                            <th>耗时</th>
+                            <th>运行时长</th>
                             <th>结果</th>
                             <th>操作</th>
                         </tr>
@@ -127,6 +133,7 @@
 <script src="js/content.min.js?v=1.0.0"></script>
 <script src="js/plugins/iCheck/icheck.min.js"></script>
 <script src="js/plugins/echarts/echarts.min.js"></script>
+<script src="js/plugins/chosen/chosen.jquery.js"></script>
 <script type="text/javascript">
     var resultData = ${resultData};
     function details(obj) {
@@ -157,21 +164,48 @@
         $("#testAll").text(resultData["testAll"]);
         $("#beginTime").text(resultData["beginTime"]);
         $("#totalTime").text(resultData["totalTime"]);
+        var classNames = [];
         $.each(resultData["testResult"], function (i, n) {
-            var status = "";
-            if (n["status"] == '成功') {
-                status = "<td><span class='text-navy'>成功</span></td>";
-            } else if (n["status"] == '失败') {
-                status = "<td><span class='text-danger'>失败</span></td>";
-            } else if (n["status"] == '跳过') {
-                status = "<td><span class='text-warning'>跳过</span></td>";
-            } else {
-                status = "<td><span>" + n["status"] + "</span></td>";
+            if(classNames.indexOf(n["className"])==-1){
+                classNames.push(n["className"]);
             }
-            var tr = "<tr style='font-family: Consolas'><td>" + (i + 1) + "</td><td>" + n["className"] + "</td><td>" + n["methodName"] + "</td><td>"+n["description"]+"</td><td>" + n["spendTime"] + "</td>" +
-                status + "<td><button type='button' onclick='details(this)' buttonIndex='" + i + "' class='btn btn-primary btn-xs' style='margin-bottom: 0px'>展开</button></td></tr>"
-            $("#detailBody").append(tr);
         });
+
+        $.each(classNames, function (i, n) {
+            $("#filterClass").append("<option value='"+n+"' hassubinfo='true'>"+n+"</option>");
+        });
+
+        $("#filterClass").chosen();
+
+        function generateResult(value) {
+            $("#detailBody").children().remove();
+            $.each(resultData["testResult"], function (i, n) {
+                if(value=="" || n["className"]==value){
+                    var status = "";
+                    if (n["status"] == '成功') {
+                        status = "<td><span class='text-navy'>成功</span></td>";
+                    } else if (n["status"] == '失败') {
+                        status = "<td><span class='text-danger'>失败</span></td>";
+                    } else if (n["status"] == '跳过') {
+                        status = "<td><span class='text-warning'>跳过</span></td>";
+                    } else {
+                        status = "<td><span>" + n["status"] + "</span></td>";
+                    }
+                    var tr = "<tr style='font-family: Consolas'><td>" + (i + 1) + "</td><td>" + n["className"] + "</td><td>" + n["methodName"] + "</td><td>" + n["spendTime"] + "</td>" +
+                        status + "<td><button type='button' onclick='details(this)' buttonIndex='" + i + "' class='btn btn-primary btn-xs' style='margin-bottom: 0px'>展开</button></td></tr>"
+                    $("#detailBody").append(tr);
+                }
+            });
+        }
+
+        generateResult("");
+
+        $("#filterClass").on('change', function () {
+            var selected = $("#filterClass").val();
+            generateResult(selected);
+        });
+
+        //$(".chosen-select").trigger("chosen:updated");
 
         function pie() {
             var option = {
