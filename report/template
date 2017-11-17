@@ -9,6 +9,7 @@
     <link href="css/animate.min.css" rel="stylesheet">
     <link href="css/style.min.css?v=4.0.0" rel="stylesheet">
     <link href="css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="css/style.min.css?v=4.0.0"  rel="stylesheet">
     <base target="_blank">
 </head>
 <body class="gray-bg">
