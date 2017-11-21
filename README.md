@@ -6,7 +6,9 @@ ztest是一个测试报告，报告清晰简单，有饼图，汇总，运行详
 
 ## 使用方式
 
-1. 从[ztest](https://github.com/zhangfei19841004/ztest)pull代码。
+> 将报告的json数据替换template文件中的`${resultData}`即可。
+
+1. pull [ztest](https://github.com/zhangfei19841004/ztest)。
 2. 读取template文件数据。
 3. 将测试报告数据json序列化。
 4. 用json序列化后的数据替换读取的template文件中的`${resultData}`。比如：
@@ -47,8 +49,14 @@ output.write(template);
 
 ## Java TestNg使用示例
 
-请参考[ztest](https://github.com/zhangfei19841004/ztest)中的`TestDemo1.java ZTestReport.java FileUtil.java`
+请参考[ztest](https://github.com/zhangfei19841004/ztest)中的`TestDemo1.java ZTestReport.java`
 
 ## 报告展示
 
 ![ztest](https://github.com/zhangfei19841004/ztest/blob/master/ztest.png)
+
+## 鸣谢
+
+感谢mock哥提供的python unittest实现部分，使用python unittest的同学可以无缝对接该报告！
+
+mock哥git地址：[mock哥git地址](https://github.com/TesterlifeRaymond/BeautifulReport)

@@ -2,8 +2,11 @@ package com.test.report;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,9 +29,12 @@ import org.testng.xml.XmlSuite;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.test.testcase.FileUtil;
 
 public class ZTestReport implements IReporter {
+	
+	private String path = System.getProperty("user.dir")+File.separator+"report.html";
+	
+	private String templatePath = System.getProperty("user.dir")+File.separator+"template";
 	
 	private int testsPass = 0;
 
@@ -99,9 +105,6 @@ public class ZTestReport implements IReporter {
 
 	private void outputResult(List<ITestResult> list) {
 		try {
-			String path = System.getProperty("user.dir")+File.separator+"report/report.html";
-			String templatePath = System.getProperty("user.dir")+File.separator+"report/template";
-			BufferedWriter output = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(new File(path)),"UTF-8"));
 			List<ReportInfo> listInfo = new ArrayList<ReportInfo>();
 			int index = 0;
 			for (ITestResult result : list) {
@@ -143,7 +146,8 @@ public class ZTestReport implements IReporter {
 			result.put("totalTime", totalTime+"ms");
 			result.put("testResult", listInfo);
 			Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-			String template = FileUtil.read(templatePath);
+			String template = this.read(templatePath);
+			BufferedWriter output = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(new File(path)),"UTF-8"));
 			template = template.replaceFirst("\\$\\{resultData\\}", gson.toJson(result));
 			output.write(template);
 			output.flush();
@@ -244,5 +248,33 @@ public class ZTestReport implements IReporter {
 			this.description = description;
 		}
 		
+	}
+	
+	private String read(String path) {
+		File file = new File(path);
+		InputStream is = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			is = new FileInputStream(file);
+			int index = 0;
+			byte[] b = new byte[1024];
+			while ((index = is.read(b)) != -1) {
+				sb.append(new String(b, 0, index));
+			}
+			return sb.toString();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 }

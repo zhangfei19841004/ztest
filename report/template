@@ -128,7 +128,7 @@
                             <th>测试类</th>
                             <th>测试方法</th>
                             <th>用例描述</th>
-                            <th>运行时长</th>
+                            <th>耗时</th>
                             <th>结果</th>
                             <th>操作</th>
                         </tr>
@@ -176,6 +176,10 @@
         $("#testAll").text(resultData["testAll"]);
         $("#beginTime").text(resultData["beginTime"]);
         $("#totalTime").text(resultData["totalTime"]);
+        $("#filterAll").text(resultData["testAll"]);
+        $("#filterOk").text(resultData["testPass"]);
+        $("#filterFail").text(resultData["testFail"]);
+        $("#filterSkip").text(resultData["testSkip"]);
         var classNames = [];
         var results = [];
         $.each(resultData["testResult"], function (i, n) {
