@@ -7128,6 +7128,12 @@
 </script>
 <script type="text/javascript">
     var resultData = ${resultData};
+
+    function clickRow(obj){
+        $("#detailBody").children("tr").attr("style","font-family: Consolas");
+        $(obj).attr("style","font-family: Consolas; background-color: #b0d877");
+    }
+
     function details(obj) {
         if ($(obj).text() == '展开') {
             var len = $(obj).parent().parent().children().length;
@@ -7203,7 +7209,7 @@
                     } else {
                         status = "<td><span>" + n["status"] + "</span></td>";
                     }
-                    var tr = "<tr style='font-family: Consolas'>" +
+                    var tr = "<tr style='font-family: Consolas' onclick='clickRow(this)'>" +
                         "<td>" + (i + 1) + "</td>" +
                         "<td>" + n["className"] + "</td>" +
                         "<td>" + n["methodName"] + "</td>" +
