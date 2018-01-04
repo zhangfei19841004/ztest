@@ -118,12 +118,15 @@ public class ZTestReport implements IReporter {
 				totalTime += spendTime;
 				String status = this.getStatus(result.getStatus());
 				List<String> log = Reporter.getOutput(result);
+				for (int i = 0; i < log.size(); i++) {
+					log.set(i, log.get(i).replaceAll("\"", "\\\\\""));
+				}
 				Throwable throwable = result.getThrowable();
 				if(throwable!=null){
-					log.add(throwable.toString());
+					log.add(throwable.toString().replaceAll("\"", "\\\\\""));
 					StackTraceElement[] st = throwable.getStackTrace();
 					for (StackTraceElement stackTraceElement : st) {
-						log.add("    " + stackTraceElement);
+						log.add(("    " + stackTraceElement).replaceAll("\"", "\\\\\""));
 					}
 				}
 				ReportInfo info = new ReportInfo();
