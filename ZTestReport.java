@@ -151,7 +151,7 @@ public class ZTestReport implements IReporter {
 			Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 			String template = this.read(templatePath);
 			BufferedWriter output = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(new File(path)),"UTF-8"));
-			template = template.replaceFirst("\\$\\{resultData\\}", gson.toJson(result));
+			template = template.replaceFirst("\\$\\{resultData\\}", Matcher.quoteReplacement(gson.toJson(result)));
 			output.write(template);
 			output.flush();
 			output.close();
