@@ -6966,15 +6966,15 @@
     </style>
 </head>
 <body class="gray-bg">
-<div class="row white-bg dashboard-header" style="margin-left: 20px;margin-right: 20px">
+<div class="row dashboard-header" style="margin-left: 20px;margin-right: 20px;background-color: #1ab394">
     <div class="col-sm-12 text-center">
-        <span style="color: #1ab394; font-size: 30px; font-weight: 700">测试报告</span>
+        <span style="color: #ffffff; font-size: 30px; font-weight: 700">测试报告</span>
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-top: 10px; padding-bottom: 0px">
     <div class="row">
         <div class="col-sm-12">
-            <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins" style="margin-bottom: 0px">
                 <div class="ibox-title">
                     <h5>报告汇总</h5>
                     <div class="ibox-tools">
@@ -7042,6 +7042,8 @@
             </div>
         </div>
     </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-top: 10px; padding-bottom: 0px">
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
