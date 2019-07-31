@@ -1,62 +1,39 @@
 package com.test.report;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.testng.IReporter;
-import org.testng.IResultMap;
-import org.testng.ISuite;
-import org.testng.ISuiteResult;
-import org.testng.ITestContext;
-import org.testng.ITestResult;
-import org.testng.Reporter;
-import org.testng.xml.XmlSuite;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.testng.*;
+import org.testng.xml.XmlSuite;
+
+import java.text.SimpleDateFormat;
 
 public class ZTestReport implements IReporter {
-	
-	private String path = System.getProperty("user.dir")+File.separator+"report.html";
-	
-	private String templatePath = System.getProperty("user.dir")+File.separator+"template";
-	
+
+	private String path = System.getProperty("user.dir") + File.separator + "report.html";
+
+	private String templatePath = System.getProperty("user.dir") + File.separator + "template";
+
 	private int testsPass = 0;
 
 	private int testsFail = 0;
 
 	private int testsSkip = 0;
-	
+
 	private String beginTime;
-	
+
 	private long totalTime;
-	
+
 	private String name;
-	
-	public ZTestReport(){
-		SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmssSSS");
+
+	public ZTestReport() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		name = formatter.format(System.currentTimeMillis());
 	}
-	
-	public ZTestReport(String name){
+
+	public ZTestReport(String name) {
 		this.name = name;
-		if(this.name==null){
-			SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmssSSS");
+		if (this.name == null) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 			this.name = formatter.format(System.currentTimeMillis());
 		}
 	}
@@ -109,8 +86,8 @@ public class ZTestReport implements IReporter {
 			int index = 0;
 			for (ITestResult result : list) {
 				String tn = result.getTestContext().getCurrentXmlTest().getParameter("testCase");
-				if(index==0){
-					SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss.SSS");
+				if (index == 0) {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 					beginTime = formatter.format(new Date(result.getStartMillis()));
 					index++;
 				}
@@ -119,19 +96,19 @@ public class ZTestReport implements IReporter {
 				String status = this.getStatus(result.getStatus());
 				List<String> log = Reporter.getOutput(result);
 				for (int i = 0; i < log.size(); i++) {
-					log.set(i, log.get(i).replaceAll("\"", "\\\\\""));
+					log.set(i, this.toHtml(log.get(i)));
 				}
 				Throwable throwable = result.getThrowable();
-				if(throwable!=null){
-					log.add(throwable.toString().replaceAll("\"", "\\\\\""));
+				if (throwable != null) {
+					log.add(this.toHtml(throwable.toString()));
 					StackTraceElement[] st = throwable.getStackTrace();
 					for (StackTraceElement stackTraceElement : st) {
-						log.add(("    " + stackTraceElement).replaceAll("\"", "\\\\\""));
+						log.add(this.toHtml("    " + stackTraceElement));
 					}
 				}
 				ReportInfo info = new ReportInfo();
 				info.setName(tn);
-				info.setSpendTime(spendTime+"ms");
+				info.setSpendTime(spendTime + "ms");
 				info.setStatus(status);
 				info.setClassName(result.getInstanceName());
 				info.setMethodName(result.getName());
@@ -144,13 +121,13 @@ public class ZTestReport implements IReporter {
 			result.put("testPass", testsPass);
 			result.put("testFail", testsFail);
 			result.put("testSkip", testsSkip);
-			result.put("testAll", testsPass+testsFail+testsSkip);
+			result.put("testAll", testsPass + testsFail + testsSkip);
 			result.put("beginTime", beginTime);
-			result.put("totalTime", totalTime+"ms");
+			result.put("totalTime", totalTime + "ms");
 			result.put("testResult", listInfo);
 			Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 			String template = this.read(templatePath);
-			BufferedWriter output = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(new File(path)),"UTF-8"));
+			BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path)), "UTF-8"));
 			template = template.replaceFirst("\\$\\{resultData\\}", Matcher.quoteReplacement(gson.toJson(result)));
 			output.write(template);
 			output.flush();
@@ -164,35 +141,48 @@ public class ZTestReport implements IReporter {
 	private String getStatus(int status) {
 		String statusString = null;
 		switch (status) {
-		case 1:
-			statusString = "成功";
-			break;
-		case 2:
-			statusString = "失败";
-			break;
-		case 3:
-			statusString = "跳过";
-			break;
-		default:
-			break;
+			case 1:
+				statusString = "成功";
+				break;
+			case 2:
+				statusString = "失败";
+				break;
+			case 3:
+				statusString = "跳过";
+				break;
+			default:
+				break;
 		}
 		return statusString;
 	}
-	
+
+	private String toHtml(String str) {
+		if (str == null) {
+			return "";
+		} else {
+			str = str.replaceAll("<", "&lt;");
+			str = str.replaceAll(">", "&gt;");
+			str = str.replaceAll(" ", "&nbsp;");
+			str = str.replaceAll("\n", "<br>");
+			str = str.replaceAll("\"", "\\\\\"")
+		}
+		return str;
+	}
+
 	public static class ReportInfo {
-		
+
 		private String name;
-		
+
 		private String className;
-	
+
 		private String methodName;
-		
+
 		private String description;
-		
+
 		private String spendTime;
-				
+
 		private String status;
-		
+
 		private List<String> log;
 
 		public String getName() {
@@ -250,9 +240,9 @@ public class ZTestReport implements IReporter {
 		public void setDescription(String description) {
 			this.description = description;
 		}
-		
+
 	}
-	
+
 	private String read(String path) {
 		File file = new File(path);
 		InputStream is = null;
