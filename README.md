@@ -60,3 +60,7 @@ output.write(template);
 感谢mock哥提供的python unittest实现部分，使用python unittest的同学可以无缝对接该报告！
 
 mock哥git地址：[mock哥git地址](https://github.com/TesterlifeRaymond/BeautifulReport)
+
+## junit5版本
+
+junit5版本git地址:[https://github.com/shenyanf/junitHtmlReport](https://github.com/shenyanf/junitHtmlReport)
